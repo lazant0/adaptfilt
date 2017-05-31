@@ -1,5 +1,10 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import numpy as np
-import _paramcheck as _pchk
+import adaptfilt._paramcheck as _pchk
 
 
 def nlmsru(u, d, M, step, eps=0.001, leak=0, initCoeffs=None, N=None,
@@ -119,8 +124,8 @@ def nlmsru(u, d, M, step, eps=0.001, leak=0, initCoeffs=None, N=None,
     _pchk.checkNumTaps(M)
     # Max iteration check
     if N is None:
-        N = len(u)-M+1
-    _pchk.checkIter(N, len(u)-M+1)
+        N = len(u) - M + 1
+    _pchk.checkIter(N, len(u) - M + 1)
     # Check len(d)
     _pchk.checkDesiredSignal(d, N, M)
     # Step check
@@ -148,21 +153,21 @@ def nlmsru(u, d, M, step, eps=0.001, leak=0, initCoeffs=None, N=None,
     # Need to add a zero to u that will never be used in order to update input
     # power
     u = np.concatenate((u, [0]))
-    leakstep = (1 - step*leak)
+    leakstep = (1 - step * leak)
     if returnCoeffs:
         # Matrix to hold coeffs for each iteration
         W = np.zeros((N, M), dtype=dtype)
 
     # Perform filtering
-    for n in xrange(N):
-        x = np.flipud(u[n:n+M])  # Slice to get view of M latest datapoints
+    for n in range(N):
+        x = np.flipud(u[n:n + M])  # Slice to get view of M latest datapoints
         y[n] = np.dot(x, w)
-        e[n] = d[n+M-1] - y[n]
+        e[n] = d[n + M - 1] - y[n]
 
-        normFactor = 1./(ru + eps)
+        normFactor = 1. / (ru + eps)
         w = leakstep * w + step * normFactor * x * e[n]
         y[n] = np.dot(x, w)
-        ru = u[n+M]**2 + ru - u[n]**2  # Update input power for next iteration
+        ru = u[n + M] ** 2 + ru - u[n] ** 2  # Update input power for next iteration
 
         if returnCoeffs:
             W[n] = w

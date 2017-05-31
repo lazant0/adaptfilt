@@ -1,10 +1,14 @@
 """
 Functions used for checking input parameters.
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 
 def checkDesiredSignal(d, N, M):
-    if len(d) < N+M-1:
+    if len(d) < N + M - 1:
         raise ValueError('Desired signal must be >= N+M-1 or len(u)')
 
 

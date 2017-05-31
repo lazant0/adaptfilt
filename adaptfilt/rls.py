@@ -1,5 +1,5 @@
 import numpy as np
-import _paramcheck as _pchk
+import adaptfilt._paramcheck as _pchk
 
 
 def rls(u, d, M, ffactor, initP=None, initCoeffs=None, N=None,
@@ -69,8 +69,8 @@ def rls(u, d, M, ffactor, initP=None, initCoeffs=None, N=None,
     _pchk.checkNumTaps(M)
     # Max iteration check
     if N is None:
-        N = len(u)-M+1
-    _pchk.checkIter(N, len(u)-M+1)
+        N = len(u) - M + 1
+    _pchk.checkIter(N, len(u) - M + 1)
     # Check len(d)
     _pchk.checkDesiredSignal(d, N, M)
     # Forgetting factor check
@@ -102,13 +102,13 @@ def rls(u, d, M, ffactor, initP=None, initCoeffs=None, N=None,
         W = np.zeros((N, M))  # Matrix to hold coeffs for each iteration
 
     # Perform filtering
-    for n in xrange(N):
+    for n in range(N):
         # Slice M latest data points
-        x = np.flipud(u[n:n+M])
+        x = np.flipud(u[n:n + M])
 
         # Filter using current coeffs, calculate a priori error
         y[n] = np.dot(x.T, w)
-        xi[n] = d[n+M-1] - y[n]
+        xi[n] = d[n + M - 1] - y[n]
 
         # Solve the weighted normal equations using recursive approach
         pi = np.dot(P, x)
@@ -118,7 +118,7 @@ def rls(u, d, M, ffactor, initP=None, initCoeffs=None, N=None,
         w = w + k * xi[n]
 
         # Update P matrix for next iteration
-        P = 1./ffactor * (P - np.dot(k, pi.T))
+        P = 1. / ffactor * (P - np.dot(k, pi.T))
 
         if returnCoeffs:
             W[n, :] = w[:, 0]

@@ -1,6 +1,11 @@
 """
 Miscellaneous helper functions.
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import numpy as np
 
 
@@ -40,18 +45,18 @@ def mswe(w, v):
     w = np.array(w)
     v = np.array(v)
     # Check dimensions
-    if(len(w.shape) != 2):
+    if len(w.shape) != 2:
         raise TypeError('Estimated coefficients must be in NxM matrix')
-    if(len(v.shape) != 1):
+    if len(v.shape) != 1:
         raise TypeError('Real coefficients must be in 1d array')
     # Ensure equal length between estimated and real coeffs
     N, M = w.shape
     L = v.size
-    if(M < L):
-        v = v[:-(L-M)]
-    elif(M > L):
-        v = np.concatenate((v, np.zeros(M-L)))
+    if M < L:
+        v = v[:-(L - M)]
+    elif M > L:
+        v = np.concatenate((v, np.zeros(M - L)))
 
     # Calculate and return MSWE
-    mswe = np.mean((w - v)**2, axis=1)
+    mswe = np.mean((w - v) ** 2, axis=1)
     return mswe

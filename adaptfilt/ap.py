@@ -1,5 +1,10 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import numpy as np
-import _paramcheck as _pchk
+import adaptfilt._paramcheck as _pchk
 
 
 def ap(u, d, M, step, K, eps=0.001, leak=0, initCoeffs=None, N=None,
@@ -119,8 +124,8 @@ def ap(u, d, M, step, K, eps=0.001, leak=0, initCoeffs=None, N=None,
     _pchk.checkNumTaps(M)
     # Max iteration check
     if N is None:
-        N = len(u)-M-K+1
-    _pchk.checkIter(N, len(u)-M+1)
+        N = len(u) - M - K + 1
+    _pchk.checkIter(N, len(u) - M + 1)
     # Check len(d)
     _pchk.checkDesiredSignal(d, N, M)
     # Step check
@@ -145,20 +150,20 @@ def ap(u, d, M, step, K, eps=0.001, leak=0, initCoeffs=None, N=None,
     w = initCoeffs  # Initial filter coeffs
     I = np.identity(K)  # Init. identity matrix for faster loop matrix inv.
     epsI = eps * np.identity(K)  # Init. epsilon identiy matrix
-    leakstep = (1 - step*leak)
+    leakstep = (1 - step * leak)
 
     if returnCoeffs:
         # Matrix to hold coeffs for each iteration
         W = np.zeros((N, M), dtype=dtype)
 
     # Perform filtering
-    for n in xrange(N):
+    for n in range(N):
         # Generate U matrix and D vector with current data
         U = np.zeros((M, K))
         for k in np.arange(K):
-            U[:, (K-k-1)] = u[n+k:n+M+k]
+            U[:, (K - k - 1)] = u[n + k:n + M + k]
         U = np.flipud(U)
-        D = np.flipud(d[n+M-1:n+M+K-1])
+        D = np.flipud(d[n + M - 1:n + M + K - 1])
 
         # Filter
         y = np.dot(U.T, w)

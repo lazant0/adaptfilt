@@ -22,4 +22,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     license='MIT',
+    requires=['numpy']
 )

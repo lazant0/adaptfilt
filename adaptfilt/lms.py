@@ -1,5 +1,11 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import numpy as np
-import _paramcheck as _pchk
+
+import adaptfilt._paramcheck as _pchk
 
 
 def lms(u, d, M, step, leak=0, initCoeffs=None, N=None, returnCoeffs=False):
@@ -107,8 +113,8 @@ def lms(u, d, M, step, leak=0, initCoeffs=None, N=None, returnCoeffs=False):
     _pchk.checkNumTaps(M)
     # Max iteration check
     if N is None:
-        N = len(u)-M+1
-    _pchk.checkIter(N, len(u)-M+1)
+        N = len(u) - M + 1
+    _pchk.checkIter(N, len(u) - M + 1)
     # Check len(d)
     _pchk.checkDesiredSignal(d, N, M)
     # Step check
@@ -131,16 +137,16 @@ def lms(u, d, M, step, leak=0, initCoeffs=None, N=None, returnCoeffs=False):
     y = np.zeros(N, dtype=dtype)  # Filter output
     e = np.zeros(N, dtype=dtype)  # Error signal
     w = initCoeffs  # Initial filter coeffs
-    leakstep = (1 - step*leak)
+    leakstep = (1 - step * leak)
     if returnCoeffs:
         # Matrix to hold coeffs for each iteration
         W = np.zeros((N, M), dtype=dtype)
 
     # Perform filtering
-    for n in xrange(N):
-        x = np.flipud(u[n:n+M])  # Slice to get view of M latest datapoints
+    for n in range(N):
+        x = np.flipud(u[n:n + M])  # Slice to get view of M latest datapoints
         y[n] = np.dot(x, w)
-        e[n] = d[n+M-1] - y[n]
+        e[n] = d[n + M - 1] - y[n]
 
         w = leakstep * w + step * x * e[n]
         y[n] = np.dot(x, w)
